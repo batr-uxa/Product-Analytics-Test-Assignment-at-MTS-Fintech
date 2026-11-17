@@ -45,4 +45,5 @@ SELECT
     ROUND((rc.retained_users::numeric / cs.total_users) * 100, 2) AS retention_percent
 FROM retention_counts rc
 JOIN cohort_size cs ON rc.cohort_month = cs.cohort_month
+WHERE rc.cohort_month >= (CURRENT_TIMESTAMP AT TIME ZONE 'UTC')::date - INTERVAL '1 year' 
 ORDER BY rc.cohort_month, rc.month_number;
