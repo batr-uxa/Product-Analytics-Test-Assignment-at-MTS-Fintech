@@ -33,15 +33,17 @@ SELECT
     id_client,
     SUM(sum_tran) AS total_spent_30d
 FROM transact
-WHERE tran_time >= CURRENT_DATE - INTERVAL '30 days'
+WHERE tran_time >= (CURRENT_TIMESTAMP AT TIME ZONE 'UTC')::date - INTERVAL '30 days'
 GROUP BY id_client
 ORDER BY total_spent_30d DESC;
+
 WITH top_clients AS (
     SELECT 
-        id_client
+        id_client,
+        SUM(sum_tran) AS total_all_time  
     FROM transact
     GROUP BY id_client
-    ORDER BY SUM(sum_tran) DESC
+    ORDER BY total_all_time DESC, id_client ASC
     LIMIT 100
 )
 SELECT 
